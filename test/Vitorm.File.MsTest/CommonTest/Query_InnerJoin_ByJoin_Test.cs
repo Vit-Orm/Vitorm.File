@@ -146,7 +146,7 @@ namespace Vitorm.MsTest.CommonTest
                         , (user, father) => new { user, father }
                     );
 
-                var userList = query.ToList();
+                var userList = query.OrderBy(m => m.user.id).ToList();
 
                 Assert.AreEqual(3, userList.Count);
                 Assert.AreEqual(1, userList.First().user.id);
