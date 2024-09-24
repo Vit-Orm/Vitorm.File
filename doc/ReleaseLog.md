@@ -1,1 +1,0 @@
-﻿# Vitorm.File ReleaseLog
