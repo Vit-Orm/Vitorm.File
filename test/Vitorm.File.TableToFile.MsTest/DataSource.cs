@@ -1,5 +1,7 @@
 ﻿namespace Vitorm.MsTest
 {
+    using Vit.Core.Util.ConfigurationManager;
+
     using DbContext = Vitorm.File.DbContext;
 
     [System.ComponentModel.DataAnnotations.Schema.Table("User")]
@@ -59,10 +61,10 @@
         public static DbContext CreateDbContextForWriting(bool autoInit = true) => CreateDbContext(autoInit);
         public static DbContext CreateDbContext(bool autoInit = true)
         {
-            var guid = Guid.NewGuid().ToString();
-            var filePath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Data", $"{guid}");
+            string connectionString = Appsettings.json.GetStringByPath("Vitorm.Data[0].connectionString");
+            string mode = Appsettings.json.GetStringByPath("Vitorm.Data[0].mode");
 
-            var dbContext = new Vitorm.File.DbContext(filePath);
+            var dbContext = new Vitorm.File.DbContext(connectionString, mode);
 
             if (autoInit)
                 InitDbContext(dbContext);

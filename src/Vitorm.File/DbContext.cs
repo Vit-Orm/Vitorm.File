@@ -14,6 +14,9 @@ namespace Vitorm.File
         public DbContext(string connectionString) : this(new DbConfig(connectionString))
         {
         }
+        public DbContext(string connectionString, string mode) : this(new DbConfig(connectionString, mode))
+        {
+        }
 
 
         #region Transaction

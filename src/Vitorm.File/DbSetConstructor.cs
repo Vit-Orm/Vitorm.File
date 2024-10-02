@@ -19,7 +19,7 @@ namespace Vitorm.File
         {
             // TableToFile(default), TableToDir , RowMapToFile
             if (dbContext.dbConfig.mode == "TableToDir") return new DbSet_TableToDir<Entity, EntityKey>(dbContext, entityDescriptor);
-            if (dbContext.dbConfig.mode == "TableMapToFile") return new DbSet_RowMapToFile<Entity, EntityKey>(dbContext, entityDescriptor);
+            if (dbContext.dbConfig.mode == "RowMapToFile") return new DbSet_RowMapToFile<Entity, EntityKey>(dbContext, entityDescriptor);
 
             return new DbSet_TableToFile<Entity, EntityKey>(dbContext, entityDescriptor);
         }

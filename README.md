@@ -20,7 +20,7 @@ mode: TableToDir
     table               :   "xxx/{{databaseName}}/{{tableName}}"
     row                 :   "xxx/{{databaseName}}/{{tableName}}/{{key}}.json"
 
-mode: TableToFile(default),RowMapToFile
+mode: TableToFile(default), RowMapToFile
     connectionString    :   "xxx/{{databaseName}}"
     table               :   "xxx/{{databaseName}}/{{tableName}}.json"
 
@@ -201,6 +201,7 @@ dotnet add package Vitorm.File
     "Data": [
       {
         "provider": "File",
+        "mode": "TableToFile",
         "namespace": "App",
         "connectionString": "Data/db_orm"
       }
@@ -313,7 +314,8 @@ namespace App
 
 
 # Examples:  
-[Test Example](https://github.com/Vit-Orm/Vitorm.File/tree/master/test/Vitorm.File.MsTest)    
+[Vitorm Example](https://github.com/Vit-Orm/Vitorm.File/tree/master/test/Vitorm.File.TableToFile.MsTest)    
+[Vitorm.Data Example](https://github.com/Vit-Orm/Vitorm.File/tree/master/test/Vitorm.File.Data.TableToFile.MsTest)    
 
 
 

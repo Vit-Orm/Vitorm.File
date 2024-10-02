@@ -42,9 +42,9 @@ namespace Vitorm.File
         {
             var _connectionString = Path.Combine(Path.GetDirectoryName(connectionString), databaseName);
 
-            return new DbConfig(_connectionString);
+            return new DbConfig(_connectionString, mode);
         }
 
-        internal string dbHashCode => connectionString.GetHashCode().ToString();
+        internal string dbHashCode => (connectionString + (mode ?? "TableToFile")).GetHashCode().ToString();
     }
 }
