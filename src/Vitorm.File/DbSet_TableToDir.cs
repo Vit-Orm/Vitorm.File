@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 using Vit.Core.Module.Serialization;
@@ -12,25 +11,9 @@ using Vitorm.Entity;
 
 namespace Vitorm.File
 {
-    public class DbSetConstructor
-    {
-        public static IDbSet CreateDbSet(IDbContext dbContext, IEntityDescriptor entityDescriptor)
-        {
-            return _CreateDbSet.MakeGenericMethod(entityDescriptor.entityType)
-                     .Invoke(null, new object[] { dbContext, entityDescriptor }) as IDbSet;
-        }
-
-        static readonly MethodInfo _CreateDbSet = new Func<DbContext, IEntityDescriptor, IDbSet>(CreateDbSet<object>)
-                   .Method.GetGenericMethodDefinition();
-        public static IDbSet<Entity> CreateDbSet<Entity>(DbContext dbContext, IEntityDescriptor entityDescriptor)
-        {
-            return new DbSet<Entity>(dbContext, entityDescriptor);
-        }
-
-    }
 
 
-    public partial class DbSet<Entity> : IDbSet<Entity>
+    public partial class DbSet_TableToDir<Entity, EntityKey> : IDbSet<Entity>
     {
         public virtual IDbContext dbContext { get; protected set; }
         public virtual DbContext DbContext => (DbContext)dbContext;
@@ -40,7 +23,7 @@ namespace Vitorm.File
         public virtual IEntityDescriptor entityDescriptor => _entityDescriptor;
 
 
-        public DbSet(DbContext dbContext, IEntityDescriptor entityDescriptor)
+        public DbSet_TableToDir(DbContext dbContext, IEntityDescriptor entityDescriptor)
         {
             this.dbContext = dbContext;
             this._entityDescriptor = entityDescriptor;
@@ -63,19 +46,24 @@ namespace Vitorm.File
             return Path.Combine(DbContext.dbConfig.connectionString, entityDescriptor.tableName, key + ".json");
         }
 
-        protected virtual Entity GetEntityByPath(string path)
+
+        protected virtual Entity FromJson(Dictionary<string, object> json)
         {
-            if (!System.IO.File.Exists(path)) return default;
-
             var entity = (Entity)Activator.CreateInstance(entityDescriptor.entityType);
-
-            var json = Json.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(path));
-
             entityDescriptor.allColumns.ForEach(col =>
             {
                 if (json.TryGetValue(col.columnName, out var value)) col.SetValue(entity, TypeUtil.ConvertToType(value, col.type));
             });
             return entity;
+        }
+
+        protected virtual Entity GetEntityByPath(string path)
+        {
+            if (!System.IO.File.Exists(path)) return default;
+
+            var json = Json.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(path));
+
+            return FromJson(json);
         }
         protected int GetMaxId()
         {
@@ -107,7 +95,7 @@ namespace Vitorm.File
 
 
 
-        #region #0 Schema :  Create Drop
+        #region #0 Schema : Create Drop
 
         public virtual bool TableExist()
         {
@@ -145,7 +133,7 @@ namespace Vitorm.File
 
 
 
-        #region #1 Create :  Add AddRange
+        #region #1 Create : Add AddRange
         public virtual Entity Add(Entity entity)
         {
             object keyValue = entityDescriptor.key.GetValue(entity);

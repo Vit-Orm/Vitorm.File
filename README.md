@@ -15,10 +15,14 @@ Vitorm.File: an simple orm for File
 
 # How to store data
 
-connectionString    :    "xxx/{databaseName}"
-row                 :   "xxx/{databaseName}/{tableName}/{key}.json"
+mode: TableToDir
+    connectionString    :   "xxx/{{databaseName}}"
+    table               :   "xxx/{{databaseName}}/{{tableName}}"
+    row                 :   "xxx/{{databaseName}}/{{tableName}}/{{key}}.json"
 
-
+mode: TableToFile(default),RowMapToFile
+    connectionString    :   "xxx/{{databaseName}}"
+    table               :   "xxx/{{databaseName}}/{{tableName}}.json"
 
 
 
