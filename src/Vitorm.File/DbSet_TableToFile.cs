@@ -77,7 +77,7 @@ namespace Vitorm.File
         {
             return entities.Max(entity => int.TryParse(entityDescriptor.key.GetValue(entity)?.ToString(), out var id) ? id : 0);
         }
-       
+
 
 
         protected virtual int RemoveEntities(List<Entity> entities, IEnumerable<Entity> entitiesToRemove)
@@ -85,7 +85,7 @@ namespace Vitorm.File
             var keys = entitiesToRemove.Select(entity => entityDescriptor.key.GetValue(entity));
             return RemoveByKeys(entities, keys);
         }
-     
+
 
         protected virtual int RemoveByKeys<Key>(List<Entity> entities, IEnumerable<Key> keys)
         {

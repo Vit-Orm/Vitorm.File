@@ -10,7 +10,7 @@ namespace Vitorm.File
 
     public partial class DbSet_RowMapToFile<Entity, EntityKey> : DbSet_TableToFile<Entity, EntityKey>
     {
-        public DbSet_RowMapToFile(DbContext dbContext, IEntityDescriptor entityDescriptor):base(dbContext, entityDescriptor) { }
+        public DbSet_RowMapToFile(DbContext dbContext, IEntityDescriptor entityDescriptor) : base(dbContext, entityDescriptor) { }
 
         protected override IEnumerable<Entity> GetEntities()
         {
