@@ -75,6 +75,7 @@ namespace Vitorm.File
 
         protected virtual int GetMaxId(IEnumerable<Entity> entities)
         {
+            if (entities?.Any() != true) return 0;
             return entities.Max(entity => int.TryParse(entityDescriptor.key.GetValue(entity)?.ToString(), out var id) ? id : 0);
         }
 

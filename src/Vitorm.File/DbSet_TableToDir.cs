@@ -67,7 +67,9 @@ namespace Vitorm.File
         }
         protected int GetMaxId()
         {
-            return tableDirectory.GetFiles()?.Max(f => int.TryParse(f.Name, out var id) ? id : 0) ?? 0;
+            var files = tableDirectory.GetFiles();
+            if (files?.Any() != true) return 0;
+            return files.Max(f => int.TryParse(f.Name, out var id) ? id : 0);
         }
 
         public static int RecursionDelete(DirectoryInfo directory)
