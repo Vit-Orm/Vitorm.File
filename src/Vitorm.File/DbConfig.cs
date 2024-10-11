@@ -11,9 +11,10 @@ namespace Vitorm.File
             this.connectionString = connectionString;
         }
 
-        public DbConfig(string connectionString, string readOnlyConnectionString)
+        public DbConfig(string connectionString, string mode)
         {
             this.connectionString = connectionString;
+            this.mode = mode;
         }
 
         public DbConfig(Dictionary<string, object> config)
@@ -21,9 +22,18 @@ namespace Vitorm.File
             object value;
             if (config.TryGetValue("connectionString", out value))
                 this.connectionString = value as string;
+
+
+            if (config.TryGetValue("mode", out value))
+                this.mode = value as string;
         }
 
         public string connectionString { get; set; }
+
+        /// <summary>
+        /// TableToFile(default), TableToDir , RowMapToFile
+        /// </summary>
+        public string mode { get; set; }
 
 
         public virtual string databaseName => Path.GetFileName(connectionString);
@@ -32,9 +42,9 @@ namespace Vitorm.File
         {
             var _connectionString = Path.Combine(Path.GetDirectoryName(connectionString), databaseName);
 
-            return new DbConfig(_connectionString);
+            return new DbConfig(_connectionString, mode);
         }
 
-        internal string dbHashCode => connectionString.GetHashCode().ToString();
+        internal string dbHashCode => (connectionString + (mode ?? "TableToFile")).GetHashCode().ToString();
     }
 }
