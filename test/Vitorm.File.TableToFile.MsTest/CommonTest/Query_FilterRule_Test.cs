@@ -208,7 +208,9 @@ namespace Vitorm.MsTest.CommonTest
             dbContext.AddRange(users);
             DataSource.WaitForUpdate();
 
+
             var userQuery = dbContext.Query<User>();
+
             // #1 Contains
             {
                 var strFilter = "{'field':'name',  'operator': 'Contains',  'value': '46' }".Replace("'", "\"");
