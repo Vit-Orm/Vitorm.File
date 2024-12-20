@@ -42,7 +42,7 @@ namespace Vitorm.File
         protected virtual Entity FromJson(Dictionary<string, object> json)
         {
             var entity = (Entity)Activator.CreateInstance(entityDescriptor.entityType);
-            entityDescriptor.allColumns.ForEach(col =>
+            entityDescriptor.properties.ForEach(col =>
             {
                 if (json.TryGetValue(col.columnName, out var value)) col.SetValue(entity, TypeUtil.ConvertToType(value, col.type));
             });
@@ -50,7 +50,7 @@ namespace Vitorm.File
         }
         protected virtual Dictionary<string, object> ToJson(Entity entity)
         {
-            return entityDescriptor.allColumns.ToDictionary(col => col.columnName, col => col.GetValue(entity));
+            return entityDescriptor.properties.ToDictionary(col => col.columnName, col => col.GetValue(entity));
         }
 
 
@@ -170,7 +170,7 @@ namespace Vitorm.File
                 entities.ForEach(entity =>
                 {
                     object keyValue = entityDescriptor.key.GetValue(entity);
-                    var keyIsEmpty = keyValue is null || keyValue.Equals(TypeUtil.DefaultValue(entityDescriptor.key.type));
+                    var keyIsEmpty = keyValue is null || keyValue.Equals(TypeUtil.GetDefaultValue(entityDescriptor.key.type));
                     if (keyIsEmpty)
                     {
                         maxId++;
