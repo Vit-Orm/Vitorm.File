@@ -50,7 +50,7 @@ namespace Vitorm.File
         protected virtual Entity FromJson(Dictionary<string, object> json)
         {
             var entity = (Entity)Activator.CreateInstance(entityDescriptor.entityType);
-            entityDescriptor.allColumns.ForEach(col =>
+            entityDescriptor.properties.ForEach(col =>
             {
                 if (json.TryGetValue(col.columnName, out var value)) col.SetValue(entity, TypeUtil.ConvertToType(value, col.type));
             });
@@ -141,7 +141,7 @@ namespace Vitorm.File
             object keyValue = entityDescriptor.key.GetValue(entity);
 
             // generate identity key if needed
-            var keyIsEmpty = keyValue is null || keyValue.Equals(TypeUtil.DefaultValue(entityDescriptor.key.type));
+            var keyIsEmpty = keyValue is null || keyValue.Equals(TypeUtil.GetDefaultValue(entityDescriptor.key.type));
             if (entityDescriptor.key.isIdentity && keyIsEmpty)
             {
                 keyValue = GetMaxId() + 1;
@@ -153,7 +153,7 @@ namespace Vitorm.File
             if (System.IO.File.Exists(path)) throw new Exception("file already exist");
 
 
-            var json = entityDescriptor.allColumns.ToDictionary(col => col.columnName, col => col.GetValue(entity));
+            var json = entityDescriptor.properties.ToDictionary(col => col.columnName, col => col.GetValue(entity));
 
             System.IO.File.WriteAllText(path, Json.Serialize(json));
 
